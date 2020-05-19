@@ -1,16 +1,10 @@
 import _ from "lodash";
-import add from "../common";
+import "../common";
 import "./style.css";
-import football from "../../images/football.jpg";
-
- function component() {
-    var element = document.createElement("div");
-    element.innerHTML = _.join(["Hello", "webpack"], add(1, 2));
-    element.classList.add("hello");
-    var myIcon = new Image();
-    myIcon.src = football;
-    element.appendChild(myIcon);
-    return element;
- };
-
- document.body.appendChild(component());
+import "../common/nav-simple/index.js";
+import "../common/nav/index.js";
+import "../common/header/index.js";
+import navSide from "../common/nav-side/index.js";
+navSide.init({
+    name: "order-list"
+});

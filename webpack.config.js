@@ -20,15 +20,26 @@ const config = {
   entry: {
     index: "./src/page/index/index.js",
     login: "./src/page/login/index.js",
+    result: "./src/page/result/index.js",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "js/[name].js",
   },
+  resolve: {
+    alias: {
+      util: path.resolve(__dirname, "src/util/"),
+      page: path.resolve(__dirname, "src/page/"),
+      service: path.resolve(__dirname, "src/service/"),
+      images: path.resolve(__dirname, "src/images/"),
+      node_modules: path.resolve(__dirname, "node_modules/"),
+    },
+  },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin(getHtmlConfig("index")),
     new HtmlWebpackPlugin(getHtmlConfig("login")),
+    new HtmlWebpackPlugin(getHtmlConfig("result")),
     new MiniCssExtractPlugin({
       filename: "css/[name].css",
       chunkFilename: "[id].css",
@@ -41,18 +52,34 @@ const config = {
         use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
-        test: /\.(gif|png|jpg|svg)$/,
+        test: /\.(gif|png|jpg|svg|woff|woff2|eot|ttf)$/,
         use: [
           {
-            loader: "file-loader",
+            loader: "url-loader",
             options: {
               name: "[name].[ext]",
               outputPath: "images/",
-              publicPath: "../images"
-            }
-          }
-        ]
-      }
+              publicPath: "../images",
+            },
+          },
+        ],
+      },
+      {
+        test: /\.js/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+      {
+        test: /\.string/,
+        use: {
+          loader: "html-loader",
+        },
+      },
     ],
   },
   optimization: {
@@ -74,8 +101,16 @@ const config = {
     },
   },
   devServer: {
-    contentBase: "./dist"
-  }
+    contentBase: "./dist",
+    openPage: "view/index.html",
+    proxy: {
+      "/api": {
+        target: "http://happymmall.com",
+        pathRewrite: { "^/api": "" },
+        changeOrigin: true,
+      },
+    },
+  },
 };
 
 module.exports = config;

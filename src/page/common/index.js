@@ -1,3 +1,3 @@
-export default function add(a, b) {
-    return a + b;
-}
+import "node_modules/font-awesome/css/font-awesome.min.css";
+import "./layout.css";
+import "./footer/index.css";
